@@ -1,6 +1,6 @@
 {
   "name": "ofdreader",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "A tiny OFD (GB/T 33190) reader built with Tauri",
   "license": "MIT",

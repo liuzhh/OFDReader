@@ -1,6 +1,6 @@
 [package]
 name = "ofdreader"
-version = "0.1.0"
+version = "0.2.0"
 description = "A tiny OFD (GB/T 33190) reader built with Tauri"
 authors = ["liuzhh"]
 edition = "2021"
