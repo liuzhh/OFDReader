@@ -9,7 +9,7 @@ npm install
 npm run dev        # 开发模式，前端改动热重载
 ```
 
-Rust 侧 1.77+，Node 侧 22.22.2+。Windows 上如果 `cargo` 找不到 `link.exe`，
+Rust 侧 1.88+，Node 侧 22.22.2+。Windows 上如果 `cargo` 找不到 `link.exe`，
 用 `pwsh -File scripts/build.ps1` 自动进入 MSVC 编译环境。
 
 ### Cargo 镜像（可选）

@@ -13,7 +13,7 @@ const MAX_RES_BYTES: u64 = 40 * 1024 * 1024;
 /// `files` holds every XML part keyed by its in-package path (e.g.
 /// `Doc_0/Document.xml`); `resources` holds binary assets (images/fonts) as
 /// data URIs. The webview parses the XML and renders each page to SVG.
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 pub struct OfdPackage {
     pub files: HashMap<String, String>,
     pub resources: HashMap<String, String>,
@@ -52,7 +52,11 @@ pub fn open_from_bytes(bytes: &[u8]) -> Result<OfdPackage, String> {
         if file.is_dir() {
             continue;
         }
-        let name = normalize_name(file.name());
+        // zip 9 returns the name as a fallible UTF-8 decode; skip undecodable entries.
+        let name = match file.name() {
+            Ok(n) => normalize_name(&n),
+            Err(_) => continue,
+        };
         let lower = name.to_lowercase();
 
         if lower.ends_with(".xml") {
@@ -125,5 +129,76 @@ fn mime_from_name(lower: &str) -> &'static str {
         "font/woff2"
     } else {
         "application/octet-stream"
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::{Cursor, Write};
+
+    /// Build an in-memory OFD package: a ZIP whose parts are deflate-compressed,
+    /// as produced by the tax platform and expected on the read path.
+    fn package(parts: &[(&str, &str)]) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        let mut writer = zip::ZipWriter::new(Cursor::new(&mut bytes));
+        let options = zip::write::SimpleFileOptions::default()
+            .compression_method(zip::CompressionMethod::Deflated);
+        for (name, body) in parts {
+            writer.start_file(*name, options).unwrap();
+            writer.write_all(body.as_bytes()).unwrap();
+        }
+        writer.finish().unwrap();
+        bytes
+    }
+
+    const ENTRY: &str = r#"<?xml version="1.0"?><ofd:OFD xmlns:ofd="http://www.ofdspec.org/2016"><ofd:DocBody><ofd:DocRoot>/Doc_0/Document.xml</ofd:DocRoot></ofd:DocBody></ofd:OFD>"#;
+    const DOCUMENT: &str =
+        r#"<?xml version="1.0"?><ofd:Document xmlns:ofd="http://www.ofdspec.org/2016"/>"#;
+
+    #[test]
+    fn opens_a_deflated_package() {
+        let pkg = open_from_bytes(&package(&[
+            ("OFD.xml", ENTRY),
+            ("Doc_0/Document.xml", DOCUMENT),
+            ("Doc_0/Res/seal.png", "not really a png"),
+            ("Doc_0/Signs/Sign_0/SignedValue.dat", "signature"),
+        ]))
+        .unwrap();
+
+        assert_eq!(pkg.files.len(), 2);
+        assert_eq!(pkg.files.get("OFD.xml").map(String::as_str), Some(ENTRY));
+        assert_eq!(
+            pkg.files.get("Doc_0/Document.xml").map(String::as_str),
+            Some(DOCUMENT)
+        );
+        // Binary parts become data URIs; non-asset extensions are ignored.
+        assert_eq!(pkg.resources.len(), 1);
+        assert!(pkg.resources["Doc_0/Res/seal.png"].starts_with("data:image/png;base64,"));
+    }
+
+    #[test]
+    fn rejects_a_package_without_the_entry_document() {
+        let err = open_from_bytes(&package(&[("Doc_0/Document.xml", DOCUMENT)])).unwrap_err();
+        assert!(err.contains("OFD.xml"), "unexpected error: {err}");
+    }
+
+    #[test]
+    fn rejects_bytes_that_are_not_a_zip() {
+        let err = open_from_bytes(b"this is not an archive").unwrap_err();
+        assert!(err.contains("不是有效的"), "unexpected error: {err}");
+    }
+
+    #[test]
+    fn normalizes_entry_names() {
+        assert_eq!(
+            normalize_name(r"\Doc_0\Pages\Page_0\Content.xml"),
+            "Doc_0/Pages/Page_0/Content.xml"
+        );
+        assert_eq!(
+            normalize_name("/Doc_0/PublicRes.xml"),
+            "Doc_0/PublicRes.xml"
+        );
+        assert_eq!(normalize_name("OFD.xml"), "OFD.xml");
     }
 }

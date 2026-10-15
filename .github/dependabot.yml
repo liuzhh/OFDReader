@@ -10,6 +10,11 @@ updates:
     groups:
       npm:
         patterns: ["*"]
+    ignore:
+      # Major bumps tend to need code changes; take them deliberately rather
+      # than through a permanently red PR.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: cargo
     directory: /src-tauri
@@ -21,6 +26,10 @@ updates:
     groups:
       cargo:
         patterns: ["*"]
+    ignore:
+      # e.g. zip 2 -> 9 rewrote ZipFile::name(); do majors by hand.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /

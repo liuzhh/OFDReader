@@ -35,7 +35,7 @@
 
 ### 前置条件
 
-- [Rust](https://rustup.rs/) **1.77+**
+- [Rust](https://rustup.rs/) **1.88+**（`zip` 9 要求）
 - [Node.js](https://nodejs.org/) **22.22.2+**（`jsdom` 的要求，仅测试与 Tauri CLI 需要）
 - 平台构建依赖，参见 [Tauri prerequisites](https://tauri.app/start/prerequisites/)：
   - **Windows**：MSVC 工具链 + WebView2（Windows 10/11 已内置）
@@ -65,10 +65,13 @@ pwsh -File scripts/build.ps1
 ## 测试
 
 ```bash
-npm test
+npm test                                  # 前端：渲染测试（28 项检查）
+cd src-tauri && cargo test                # 后端：OFD 解包单元测试（4 项）
 ```
 
-`test/render-test.mjs` 用 `jsdom` 加载 `ui/index.html` + `ui/app.js`，喂入一个脚本生成的合成 OFD 包，然后断言输出的 SVG：页面尺寸、模板线条、`DrawParam` 样式继承、逐字形定位、字体映射、图片 data URI 等，共 28 项检查。
+前端 `test/render-test.mjs` 用 `jsdom` 加载 `ui/index.html` + `ui/app.js`，喂入一个脚本生成的合成 OFD 包，然后断言输出的 SVG：页面尺寸、模板线条、`DrawParam` 样式继承、逐字形定位、字体映射、图片 data URI 等。
+
+后端 `src-tauri/src/ofd.rs` 的单元测试在内存里构造 ZIP 包，覆盖 deflate 解压、部件提取、资源转 data URI，以及缺少入口文件和非法文件的报错路径。
 
 测试用的 fixture 由 [`test/fixtures/generate-synthetic-ofd.mjs`](./test/fixtures/generate-synthetic-ofd.mjs) **纯代码生成**：脚本自己拼装 XML、用内置的 PNG 编码器画印章和二维码占位图，再压缩成 ZIP。测试启动时会自动重新生成，因此磁盘上永远不存在过期的 fixture。
 
