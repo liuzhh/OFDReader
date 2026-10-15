@@ -105,7 +105,9 @@ OFD 常用来承载电子发票、行程单等票据，这类文件里包含**�
 │   └── fixtures/           # 合成 fixture 生成器
 ├── .cargo/
 │   └── config.toml.example # 可选的 crates.io 镜像模板（复制为 config.toml 启用）
-└── scripts/build.ps1       # Windows MSVC 环境自动配置
+└── scripts/
+    ├── build.ps1           # Windows MSVC 环境自动配置
+    └── bump-version.mjs    # 发版：同步版本号 + 提交 + 打 tag
 ```
 
 ## 已知限制
@@ -131,6 +133,24 @@ OFD 常用来承载电子发票、行程单等票据，这类文件里包含**�
 
 - **Windows 上提示找不到 `link.exe`**
   当前终端没有 MSVC 环境变量，用 `pwsh -File scripts/build.ps1`。
+
+## 发布新版本
+
+发版只需要一条命令：
+
+```bash
+npm run bump -- 0.2.0
+```
+
+[`scripts/bump-version.mjs`](./scripts/bump-version.mjs) 会把版本号同步进 `src-tauri/tauri.conf.json`（权威来源）、`package.json`、`src-tauri/Cargo.toml` 和 `src-tauri/Cargo.lock`，然后提交并打上 `v0.2.0` tag。推送后 Release workflow 会自动构建并公开发布：
+
+```bash
+git push origin main v0.2.0
+```
+
+> ⚠️ 为什么是"先提交再打 tag"：`tauri-action` 用 `tagName: v__VERSION__` 从 `tauri.conf.json` 读版本号。如果标签打在版本号改动之前，它会解析出**旧**版本，找到上一个 release，然后把新构建的产物覆盖上去。
+
+脚本会在这些情况下拒绝执行：版本号格式非法 / 没有递增、同名 tag 已存在、tracked 文件有未提交的改动。
 
 ## 贡献
 
@@ -166,3 +186,7 @@ Test fixtures are **generated entirely in code** by
 names, ID numbers, seals and signatures.
 
 Licensed under the [MIT License](./LICENSE).
+
+Releases: `npm run bump -- 0.2.0` syncs the version across the manifests, commits
+it and creates the tag; pushing the tag publishes the GitHub release
+automatically.

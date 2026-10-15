@@ -22,6 +22,7 @@
     "build": "tauri build",
     "build:exe": "tauri build --no-bundle",
     "fixture": "node test/fixtures/generate-synthetic-ofd.mjs --zip",
+    "bump": "node scripts/bump-version.mjs",
     "test": "node test/render-test.mjs"
   },
   "devDependencies": {
