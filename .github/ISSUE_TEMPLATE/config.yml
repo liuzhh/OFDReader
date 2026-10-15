@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 构建问题 / Tauri 环境配置
+    url: https://tauri.app/start/prerequisites/
+    about: 打不开、编译报错等环境问题，先对照 Tauri 官方的前置条件说明
+  - name: OFD 格式说明（GB/T 33190）
+    url: https://www.ofdspec.org/
+    about: 了解版式文档标准本身

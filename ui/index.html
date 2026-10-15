@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OFD Reader</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header id="toolbar" class="toolbar no-print">
+    <div class="toolbar-left">
+      <button id="btn-open" class="btn btn-primary" title="打开 OFD 文件 (Ctrl+O)">打开文件</button>
+      <button id="btn-print" class="btn" title="打印 (Ctrl+P)" disabled>打印</button>
+    </div>
+    <div class="toolbar-center">
+      <span id="doc-title" class="doc-title">未打开文档</span>
+    </div>
+    <div class="toolbar-right">
+      <button id="btn-zoom-out" class="btn btn-icon" title="缩小" disabled>−</button>
+      <span id="zoom-label" class="zoom-label">100%</span>
+      <button id="btn-zoom-in" class="btn btn-icon" title="放大" disabled>+</button>
+      <button id="btn-zoom-reset" class="btn" title="重置缩放" disabled>重置</button>
+    </div>
+    <input id="file-input" type="file" accept=".ofd" hidden />
+  </header>
+
+  <main id="viewport" class="viewport">
+    <div id="welcome" class="welcome">
+      <div class="welcome-card">
+        <div class="welcome-logo">📄</div>
+        <h1>OFD Reader</h1>
+        <p>一个轻量的 OFD 版式文档阅读器（GB/T 33190）</p>
+        <p class="welcome-hint">
+          点击「打开文件」，或将 <b>.ofd</b> 文件拖拽到此处
+        </p>
+        <button id="btn-open-2" class="btn btn-primary">选择文件…</button>
+        <p class="welcome-sub">支持电子发票等版式文档的浏览与打印</p>
+      </div>
+    </div>
+
+    <div id="page-wrap" class="page-wrap" hidden>
+      <article id="page" class="page"></article>
+    </div>
+
+    <div id="drop-overlay" class="drop-overlay" hidden>
+      <div class="drop-inner">松开以打开 OFD 文件</div>
+    </div>
+
+    <div id="loading" class="loading" hidden><div class="spinner"></div><span>正在解析文档…</span></div>
+  </main>
+
+  <footer id="statusbar" class="statusbar no-print">
+    <span id="status-text">就绪</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

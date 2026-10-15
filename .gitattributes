@@ -1,0 +1,21 @@
+# Normalize line endings in the repository; keep the working tree LF on every
+# platform so a checkout on Windows does not fight the formatters.
+* text=auto eol=lf
+
+# Generated lockfiles: keep them, but collapse them in diffs and language stats.
+Cargo.lock        text eol=lf linguist-generated
+package-lock.json text eol=lf linguist-generated
+
+# Binary assets.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.icns  binary
+*.ttf   binary
+*.otf   binary
+*.woff  binary
+*.woff2 binary
+*.ofd   binary
+*.dat   binary

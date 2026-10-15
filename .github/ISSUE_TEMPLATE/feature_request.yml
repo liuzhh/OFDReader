@@ -1,0 +1,29 @@
+name: Feature request
+description: 提出一个功能建议
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 想解决的问题
+      description: 你遇到的场景是什么？现有行为哪里不够用？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 期望的方案
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 考虑过的替代方案
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        如果这个功能涉及 GB/T 33190 的具体章节或某个阅读器的行为，请一并说明，
+        这样更容易对齐预期。

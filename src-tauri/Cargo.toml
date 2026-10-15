@@ -1,0 +1,33 @@
+[package]
+name = "ofdreader"
+version = "0.1.0"
+description = "A tiny OFD (GB/T 33190) reader built with Tauri"
+authors = ["liuzhh"]
+edition = "2021"
+rust-version = "1.77"
+license = "MIT"
+repository = "https://github.com/liuzhh/OFDReader"
+homepage = "https://github.com/liuzhh/OFDReader"
+# Desktop application, not a library: never publish to crates.io.
+publish = false
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+zip = { version = "2", default-features = false, features = ["deflate"] }
+base64 = "0.22"
+
+# ---- Binary size optimizations ----
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "z"
+panic = "abort"
+strip = true
+debug = false
+incremental = false
+overflow-checks = false

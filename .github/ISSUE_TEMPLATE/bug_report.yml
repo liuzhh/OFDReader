@@ -1,0 +1,54 @@
+name: Bug report
+description: 报告一个可复现的缺陷
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请先确认问题在最新版本的 Release 上仍然存在。
+
+        > ⚠️ 请不要上传真实的 OFD 文档（发票、行程单等）——这类文件包含姓名、证件号、
+        > 票号、印章和数字签名等个人信息。请改用 `npm run fixture` 生成的合成样例，
+        > 或自行脱敏后再附上。
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 问题描述
+      description: 发生了什么？你期望发生什么？
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 打开应用
+        2. 拖入 xxx.ofd
+        3. 看到 ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: Release 版本号，或 commit hash（自行构建时）
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: 操作系统
+      options:
+        - Windows
+        - macOS
+        - Linux
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: 日志 / 截图
+      description: 状态栏提示、开发者控制台报错或截图
+    validations:
+      required: false

@@ -1,0 +1,35 @@
+# --- Node ---
+node_modules/
+npm-debug.log*
+*.tsbuildinfo
+
+# --- Rust / Tauri build output ---
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# --- Local Cargo source override (mirror / proxy settings) ---
+# Mirrors are a per-developer choice; copy .cargo/config.toml.example to opt in.
+.cargo/config.toml
+
+# --- Generated test fixtures (rebuilt by test/fixtures/generate-synthetic-ofd.mjs) ---
+test/fixtures/ofd/
+test/fixtures/demo-*.ofd
+
+# --- OFD documents are never committed: they routinely carry personal data
+#     (passenger names, invoice numbers, seals, digital signatures). ---
+*.ofd
+
+# --- Editors / OS ---
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Local environment overrides ---
+.env
+.env.local

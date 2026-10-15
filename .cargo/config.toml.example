@@ -1,0 +1,24 @@
+# Copy to `.cargo/config.toml` (which is git-ignored) and adjust to taste.
+#
+# By default Cargo uses the official crates.io sparse index:
+#   registry = "sparse+https://index.crates.io/"
+#
+# If you are behind a slow link to crates.io, switch to a mirror by uncommenting
+# the two lines at the top of this file. The rsproxy.cn mirror below is the one
+# used while developing this project; any crates.io-compatible mirror works.
+
+# [source.crates-io]
+# replace-with = 'rsproxy-sparse'
+
+[source.rsproxy]
+registry = "https://rsproxy.cn/crates.io-index"
+
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"
+
+[registries.rsproxy]
+index = "https://rsproxy.cn/crates.io-index"
+
+[net]
+# Use the git CLI for git dependencies so system proxy settings are respected.
+git-fetch-with-cli = true

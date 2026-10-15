@@ -1,0 +1,218 @@
+:root {
+  --bg: #eceff3;
+  --toolbar-bg: #ffffff;
+  --border: #d7dce3;
+  --text: #1f2733;
+  --muted: #6b7686;
+  --accent: #2563eb;
+  --accent-hover: #1d4fd7;
+  --page-bg: #ffffff;
+  --shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 8px 24px rgba(0, 0, 0, .08);
+}
+
+* { box-sizing: border-box; }
+
+/* The [hidden] attribute must always win over component display rules
+   (e.g. .loading { display: flex }); otherwise overlays never hide. */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---------- Toolbar ---------- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: var(--toolbar-bg);
+  border-bottom: 1px solid var(--border);
+  flex: 0 0 auto;
+  user-select: none;
+}
+.toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 8px; }
+.toolbar-center { flex: 1 1 auto; text-align: center; min-width: 0; }
+.doc-title {
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.btn {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background .12s, border-color .12s, opacity .12s;
+}
+.btn:hover:not(:disabled) { background: #f2f5f9; }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+.btn-icon { width: 32px; padding: 6px 0; text-align: center; font-size: 16px; line-height: 1; }
+.zoom-label { font-size: 12px; color: var(--muted); min-width: 42px; text-align: center; }
+
+/* ---------- Viewport ---------- */
+.viewport {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 24px 16px 48px;
+}
+
+.welcome { display: flex; align-items: center; justify-content: center; min-height: 100%; }
+.welcome-card {
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 48px;
+  box-shadow: var(--shadow);
+  max-width: 520px;
+}
+.welcome-logo { font-size: 52px; line-height: 1; }
+.welcome-card h1 { margin: 12px 0 4px; font-size: 24px; }
+.welcome-card p { margin: 6px 0; color: var(--muted); font-size: 14px; }
+.welcome-hint { margin-top: 14px !important; }
+.welcome-card .btn { margin-top: 18px; padding: 10px 22px; font-size: 14px; }
+.welcome-sub { font-size: 12px !important; margin-top: 16px !important; }
+
+.page-wrap { display: flex; justify-content: center; }
+.page {
+  transform-origin: top center;
+  width: 100%;
+}
+/* Each OFD page is rendered as an <svg> sized in millimetres. */
+.ofd-page {
+  display: block;
+  background: #fff;
+  box-shadow: var(--shadow);
+  margin: 0 auto 18px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Rendered ODF content */
+.page p { margin: 0 0 .2em; }
+.page h1, .page h2, .page h3, .page h4, .page h5, .page h6 { margin: .6em 0 .3em; line-height: 1.25; }
+.page a { color: var(--accent); text-decoration: underline; }
+.page img { max-width: 100%; height: auto; }
+.page table { border-collapse: collapse; margin: .4em 0; }
+.page table td, .page table th { border: 1px solid #b9c0cc; padding: 3px 6px; vertical-align: top; }
+.page ul, .page ol { margin: .2em 0 .2em 1.4em; padding: 0; }
+.page .tab-stop { display: inline-block; width: 1.5em; }
+.page .sheet-title { font-weight: 700; font-size: 13pt; margin: 1em 0 .3em; color: #333; }
+.page .slide {
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 6px rgba(0,0,0,.08);
+  margin: 0 auto 22px;
+  padding: 1.2cm;
+  width: 25.4cm;
+  max-width: 100%;
+  min-height: 14cm;
+  background: #fff;
+}
+.page .slide-index { font-size: 10pt; color: var(--muted); margin-bottom: .5em; }
+
+/* ---------- Overlays ---------- */
+.drop-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(37, 99, 235, .12);
+  border: 3px dashed var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+.drop-inner {
+  background: #fff;
+  color: var(--accent);
+  font-size: 18px;
+  font-weight: 600;
+  padding: 18px 32px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(236, 239, 243, .82);
+  z-index: 40;
+  color: var(--muted);
+  font-size: 14px;
+}
+.spinner {
+  width: 34px; height: 34px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Status bar ---------- */
+.statusbar {
+  flex: 0 0 auto;
+  padding: 5px 14px;
+  background: var(--toolbar-bg);
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.statusbar.error { color: #c0392b; }
+
+/* ---------- Print ---------- */
+@media print {
+  html, body { height: auto; overflow: visible; background: #fff; }
+  body { display: block; }
+  .no-print, .welcome, .drop-overlay, .loading, .statusbar { display: none !important; }
+  .viewport { overflow: visible; padding: 0; }
+  .page-wrap { display: block; }
+  .page {
+    transform: none !important;
+    width: auto;
+  }
+  .ofd-page {
+    box-shadow: none;
+    margin: 0;
+    max-width: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .ofd-page:last-child { break-after: auto; page-break-after: auto; }
+  @page { margin: 0; }
+}
