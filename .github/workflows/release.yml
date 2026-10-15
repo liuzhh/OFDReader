@@ -73,6 +73,6 @@ jobs:
             | Linux | `.AppImage`, `.deb`, `.rpm` |
 
             These builds are unsigned: your OS may warn about an unknown publisher.
-          releaseDraft: true
+          releaseDraft: false
           prerelease: false
           args: --target ${{ matrix.target }}
